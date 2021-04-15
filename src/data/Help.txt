@@ -1,0 +1,8 @@
+Blueshift - Disk manipulation tool for the TEC Redshift
+Written by Wesley Mays, Apr 2021
+  ( Reddit u/Blue_240 )
+  ( Github WMays287   )
+
+Available commands:
+  * unpack/dump <Image path> <Solution path>  Read a solution from a disk image
+  * pack        <Solution path> <Image path>  Write a solution to a disk image

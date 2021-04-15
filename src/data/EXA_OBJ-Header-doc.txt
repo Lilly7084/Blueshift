@@ -1,0 +1,16 @@
+EXA_OBJ file header example
+(Remaining data is plain-text code)
+
+* (Int)      Statistics - Line count
+* (Byte)     First character of EXA name
+* (Byte)     Second character of EXA name (Optional, default 0x00)
+* (13 Bytes) Read as individual bits, MSB first:
+  * (x100)   Initial sprite
+  * (x2)     Editor view mode (00=Maximized, 01=Collapsed, 10=Follow)
+  * (x1)     Initial messade mode (0=Global, 1=Local)
+  * (x1)     Reserved for future use, keep set to 0
+
+Example (Raw header data):
+BF 01 00 00 59 41 00 00
+00 00 00 00 00 00 00 00
+00 00 0A E8 04 00 00
