@@ -4,7 +4,10 @@ import java.awt.image.BufferedImage;
 
 public class DiskReader {
 	
-	private BufferedImage image;
+	private int[] pixels;
+	private int width;
+	private int height;
+	
 	private int wpos = 0;
 	private int xpos = 0;
 	private int ypos = 0;
@@ -13,7 +16,11 @@ public class DiskReader {
 	public byte[] data;
 	
 	public DiskReader(BufferedImage image) {
-		this.image = image;
+		
+		width = image.getWidth();
+		height = image.getHeight();
+		pixels = new int[width * height];
+		image.getRGB(0, 0, width, height, pixels, 0, width);
 		
 		// Read header
 		int payloadLength =
@@ -54,7 +61,8 @@ public class DiskReader {
 	
 	private int readBit() {
 		
-		int rgb = image.getRGB(xpos, ypos);
+		int index = xpos + ypos * width;
+		int rgb = pixels[index];
 		int shift = zpos + 16 - (wpos * 8);
 		int bit = (rgb >> shift) & 1;
 		
@@ -63,11 +71,11 @@ public class DiskReader {
 		wpos = 0;
 		
 		xpos++;
-		if (xpos < image.getWidth()) return bit;
+		if (xpos < width) return bit;
 		xpos = 0;
 		
 		ypos++;
-		if (ypos < image.getHeight()) return bit;
+		if (ypos < height) return bit;
 		ypos = 0;
 		
 		zpos++;

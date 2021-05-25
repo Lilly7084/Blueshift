@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 
 import blueshift.util.DiskWriter;
 import blueshift.util.LabelMaker;
-import blueshift.util.StreamReader;
 
 public class PackDisk {
 	
@@ -24,21 +23,32 @@ public class PackDisk {
 		// Read solution
 		byte[] data = Files.readAllBytes(new File(args.get(1)).toPath());
 		
-		// Parse out solution name
-		StreamReader reader = new StreamReader(data);
-		reader.readInt(); // Image magic
-		reader.readString(); // Level ID
-		String name = reader.readString().toUpperCase(); // Solution name
+		// Read disk name
+		String name = "";
+		for (int i = 2; i < args.size(); i++) {
+			name += " " + args.get(i);
+		}
+		name = name.substring(1).toUpperCase();
 		
 		// Set up disk writer
+		// TODO add support for multiple disk blanks
 		BufferedImage blank = ImageIO.read(new File("src/data/BlankDisk.png"));
 		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("src/data/PermanentMarker.ttf"));
 		font = font.deriveFont((float) 20);
 		
-		LabelMaker.makeLabel(name, font, blank, new int[] {
-				228, 236, 236, // Max widths, from top to bottom
-				229, 257, 284  // Y position, from top to bottom
-		});
+		LabelMaker.makeLabel(blank, font, new int[][] {
+			/*
+			 * TODO update this table for better looking labels.
+			 * The current labels look like a bit pile of [REDACTED]
+			 * because there's text clipping with the label lines,
+			 * and running off the edge of the label, and I can't be
+			 * bothered to find the correct values yet...
+			 */
+			{228, 125, 229},
+			{236, 125, 257},
+			{236, 125, 284}
+		}, name);
+		
 		DiskWriter writer = new DiskWriter(blank);
 		writer.write(data);
 		

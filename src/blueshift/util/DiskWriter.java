@@ -4,14 +4,20 @@ import java.awt.image.BufferedImage;
 
 public class DiskWriter {
 	
-	private BufferedImage image;
+	private int[] pixels;
+	private int width;
+	private int height;
+	
 	private int wpos = 0;
 	private int xpos = 0;
 	private int ypos = 0;
 	private int zpos = 0;
 	
 	public DiskWriter(BufferedImage image) {
-		this.image = image;
+		width = image.getWidth();
+		height = image.getHeight();
+		pixels = new int[width * height];
+		image.getRGB(0, 0, width, height, pixels, 0, width);
 	}
 	
 	public void write(byte[] data) {
@@ -45,6 +51,8 @@ public class DiskWriter {
 	}
 	
 	public BufferedImage getImage() {
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		image.setRGB(0, 0, width, height, pixels, 0, width);
 		return image;
 	}
 	
@@ -56,21 +64,22 @@ public class DiskWriter {
 	
 	private void writeBit(int bit) {
 		
-		int rgb = image.getRGB(xpos, ypos);
+		int index = xpos + ypos * width;
+		int rgb = pixels[index];
 		int shift = zpos + 16 - wpos * 8;
 		rgb = (rgb & ~(1 << shift)) | (bit << shift);
-		image.setRGB(xpos, ypos, rgb);
+		pixels[index] = rgb;
 		
 		wpos++;
 		if (wpos < 3) return;
 		wpos = 0;
 		
 		xpos++;
-		if (xpos < image.getWidth()) return;
+		if (xpos < width) return;
 		xpos = 0;
 		
 		ypos++;
-		if (ypos < image.getHeight()) return;
+		if (ypos < height) return;
 		ypos = 0;
 		
 		zpos++;

@@ -11,10 +11,11 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
-		// FOR TESTING ONLY! REMOVE BEFORE EXPORTING
+		// TODO FOR TESTING ONLY! REMOVE BEFORE EXPORTING
 		args = new String[] {
 				"pack",
-				"Exapunks Title.solution"
+				"src/module-info.java",
+				"This is not a game!"
 		};
 		
 		// Help menu
